@@ -1,0 +1,67 @@
+# ========================================================
+# 1. Python & Virtual Environments (JANGAN DI-PUSH)
+# ========================================================
+venv/
+.venv/
+env/
+ENV/
+backend/venv/
+backend/.venv/
+**/venv/
+**/__pycache__/
+*.py[cod]
+*$py.class
+
+# ========================================================
+# 2. Database & User Uploads (JANGAN DI-PUSH)
+# Sangat krusial agar database lokal & file upload tidak 
+# menimpa data di Home Server saat git pull
+# ========================================================
+*.sqlite3
+backend/db.sqlite3
+db.sqlite3
+media/
+backend/media/
+**/media/
+staticfiles/
+backend/staticfiles/
+
+# ========================================================
+# 3. Environment Secrets & Credentials (JANGAN DI-PUSH)
+# Hanya file .env.example yang boleh di-push
+# ========================================================
+.env
+.env.*
+!.env.example
+!.env.production
+backend/.env
+frontend/.env
+*.pem
+*.key
+*.cert
+
+# ========================================================
+# 4. Node & Frontend Build Artifacts (JANGAN DI-PUSH)
+# ========================================================
+node_modules/
+frontend/node_modules/
+**/node_modules/
+dist/
+frontend/dist/
+**/dist/
+.vite/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ========================================================
+# 5. OS & IDE Metadata
+# ========================================================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+*.log
