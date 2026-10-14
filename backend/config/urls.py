@@ -19,9 +19,11 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+from django.shortcuts import redirect
 from core.api.rpc_views import json_rpc_view
 
 urlpatterns = [
+    path('', lambda request: redirect('admin/', permanent=False)),
     path('admin/', admin.site.urls),
     path('api/rpc/', json_rpc_view, name='json_rpc'),
     path('api/', include('core.api.urls')),

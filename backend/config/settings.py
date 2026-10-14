@@ -39,10 +39,12 @@ CSRF_TRUSTED_ORIGINS = [
     origin.strip()
     for origin in config(
         'CSRF_TRUSTED_ORIGINS',
-        default='http://localhost:3000,http://127.0.0.1:3000,http://localhost:8000,http://localhost:5000'
+        default='http://localhost:3000,http://127.0.0.1:3000,http://localhost:8000,http://localhost:5000,https://*.jilum.site,https://backend-booking-rooms.jilum.site'
     ).split(',')
     if origin.strip()
 ]
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+USE_X_FORWARDED_HOST = True
 
 
 # Application definition
