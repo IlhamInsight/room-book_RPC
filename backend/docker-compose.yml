@@ -16,3 +16,10 @@ services:
     volumes:
       - ./db.sqlite3:/app/db.sqlite3
       - ./media:/app/media
+    networks:
+      - dist_network
+
+networks:
+  dist_network:
+    name: dist_network
+    driver: bridge
