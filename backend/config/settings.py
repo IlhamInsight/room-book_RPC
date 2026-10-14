@@ -35,14 +35,18 @@ DEBUG = config('DEBUG', default=True, cast=bool)
 ALLOWED_HOSTS = ['*'] if DEBUG else config('ALLOWED_HOSTS', default='127.0.0.1,localhost').split(',')
 
 # CSRF Trusted Origins (diperlukan untuk Django Admin saat diakses melalui HTTPS / Cloudflare Domain)
-CSRF_TRUSTED_ORIGINS = [
-    origin.strip()
-    for origin in config(
-        'CSRF_TRUSTED_ORIGINS',
-        default='http://localhost:3000,http://127.0.0.1:3000,http://localhost:8000,http://localhost:5000,https://*.jilum.site,https://backend-booking-rooms.jilum.site'
-    ).split(',')
-    if origin.strip()
-]
+_csrf_raw = config(
+    'CSRF_TRUSTED_ORIGINS',
+    default='http://localhost:3000,http://127.0.0.1:3000,http://localhost:8000,http://localhost:5000'
+)
+CSRF_TRUSTED_ORIGINS = [origin.strip() for origin in _csrf_raw.split(',') if origin.strip()]
+CSRF_TRUSTED_ORIGINS.extend([
+    'https://*.jilum.site',
+    'https://backend-booking-rooms.jilum.site',
+    'http://*.jilum.site',
+    'http://backend-booking-rooms.jilum.site',
+])
+CSRF_TRUSTED_ORIGINS = list(set(CSRF_TRUSTED_ORIGINS))
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 USE_X_FORWARDED_HOST = True
 
