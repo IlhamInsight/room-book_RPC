@@ -5,6 +5,11 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 
+ARG VITE_RPC_URL
+ARG VITE_API_URL
+ENV VITE_RPC_URL=$VITE_RPC_URL
+ENV VITE_API_URL=$VITE_API_URL
+
 COPY . ./
 RUN npm run build
 

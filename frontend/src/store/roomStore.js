@@ -36,10 +36,11 @@ export const useRoomStore = create((set, get) => ({
         ...room,
         // Ensure price is a number
         price: parseFloat(room.price_per_hour),
-        // Placeholder images if backend doesn't have one
-        image:
-          room.image ||
-          "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80",
+        image: room.image
+          ? (room.image.startsWith("http")
+              ? room.image
+              : `${(import.meta.env.VITE_API_URL || "").replace(/\/api\/?$/, "")}${room.image.startsWith("/") ? "" : "/"}${room.image}`)
+          : "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80",
         // Use dynamic rating from API (calculated from real reviews)
         rating: room.average_rating ? parseFloat(room.average_rating).toFixed(1) : 0,
         reviews: room.review_count || 0,

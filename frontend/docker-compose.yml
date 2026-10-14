@@ -1,0 +1,15 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - VITE_RPC_URL=${VITE_RPC_URL:-}
+        - VITE_API_URL=${VITE_API_URL:-}
+    container_name: booking_frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    env_file:
+      - path: ./.env
+        required: false
