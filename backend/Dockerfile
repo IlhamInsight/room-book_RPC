@@ -23,5 +23,5 @@ COPY . /app/
 # Expose ports: 8000 for Django RPC / 5000 for Flask RPC
 EXPOSE 8000 5000
 
-# Default command: run database migration and start Flask JSON-RPC Server
-CMD ["sh", "-c", "python manage.py migrate --noinput && python rpc_server.py"]
+# Default command: run database migration, static collection, and start Django (8000) & Flask RPC (5000)
+CMD ["sh", "-c", "python manage.py migrate --noinput && python manage.py collectstatic --noinput && python manage.py runserver --insecure 0.0.0.0:8000 & python rpc_server.py"]
