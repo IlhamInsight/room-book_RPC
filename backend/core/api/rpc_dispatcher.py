@@ -168,7 +168,8 @@ class RPCDispatcher:
             try:
                 if ';base64,' in avatar_data:
                     header, imgstr = avatar_data.split(';base64,')
-                    ext = header.split('/')[-1] if '/' in header else 'jpg'
+                    raw_ext = header.split('/')[-1].split(';')[0].strip() if '/' in header else 'jpg'
+                    ext = 'jpg' if raw_ext in ('jpeg', '') else raw_ext
                 else:
                     imgstr = avatar_data
                     ext = 'jpg'

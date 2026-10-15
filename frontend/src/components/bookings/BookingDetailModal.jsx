@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Clock, MapPin, CreditCard, FileText, Info, CalendarCheck, Receipt } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { getMediaUrl } from '../../utils/media';
 
 export default function BookingDetailModal({ booking, isOpen, onClose, isLoading }) {
   const getStatusColor = (status) => {
@@ -49,7 +50,7 @@ export default function BookingDetailModal({ booking, isOpen, onClose, isLoading
                 <div className="h-48 sm:h-64 relative">
                   {booking.room_details?.image ? (
                     <img 
-                      src={`${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:8000'}${booking.room_details.image}`} 
+                      src={getMediaUrl(booking.room_details.image)} 
                       alt={booking.room_name}
                       className="w-full h-full object-cover"
                     />

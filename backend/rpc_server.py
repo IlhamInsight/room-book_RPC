@@ -50,9 +50,13 @@ def json_rpc_handler():
     result = rpc_dispatcher.dispatch(raw_body=raw_body, request_meta=meta)
     return jsonify(result), 200
 
+media_dir = os.path.join(current_dir, 'media')
+os.makedirs(os.path.join(media_dir, 'avatars'), exist_ok=True)
+os.makedirs(os.path.join(media_dir, 'payment_proofs'), exist_ok=True)
+os.makedirs(os.path.join(media_dir, 'rooms'), exist_ok=True)
+
 @app.route('/media/<path:filename>', methods=['GET'])
 def serve_media(filename):
-    media_dir = os.path.join(current_dir, 'media')
     return send_from_directory(media_dir, filename)
 
 if __name__ == '__main__':

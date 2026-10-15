@@ -1,29 +1,39 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuthStore } from '../store/authStore';
 import { User, Mail, Phone, MapPin, Camera, Save, Lock, X, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../utils/api';
+import { getMediaUrl } from '../utils/media';
 
 export default function ProfilePage() {
   const { user } = useAuthStore();
   const [isEditing, setIsEditing] = useState(false);
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
   
-  // Use a helper to get the full avatar URL
-  const getAvatarUrl = (avatarPath) => {
-    if (!avatarPath) return null;
-    if (avatarPath.startsWith('http')) return avatarPath;
-    const baseUrl = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:8000';
-    return `${baseUrl}${avatarPath}`;
-  };
+  // Use helper to get the full avatar URL
+  const getAvatarUrl = (avatarPath) => getMediaUrl(avatarPath);
 
   const [formData, setFormData] = useState({
     name: user ? user.full_name || user.username : '',
     email: user?.email || '',
     phone: user?.profile?.phone_number || '',
     address: user?.profile?.address || '',
-    avatar: getAvatarUrl(user?.profile?.avatar)
+    avatar: getMediaUrl(user?.profile?.avatar)
   });
+
+  // Sync form data if user loads or updates asynchronously
+  useEffect(() => {
+    if (user) {
+      setFormData((prev) => ({
+        ...prev,
+        name: user.full_name || user.username || prev.name,
+        email: user.email || prev.email,
+        phone: user.profile?.phone_number ?? prev.phone,
+        address: user.profile?.address ?? prev.address,
+        avatar: getMediaUrl(user.profile?.avatar) || prev.avatar,
+      }));
+    }
+  }, [user]);
 
   const [isChangingPassword, setIsChangingPassword] = useState(false);
   const [passwordData, setPasswordData] = useState({
@@ -165,10 +175,20 @@ export default function ProfilePage() {
               <div className="w-20 h-20 sm:w-24 sm:h-24 bg-white rounded-full p-1 shadow-lg relative">
                 <div className="w-full h-full bg-slate-200 rounded-full flex items-center justify-center text-2xl sm:text-3xl font-bold text-slate-500 overflow-hidden relative">
                   {formData.avatar ? (
-                    <img src={formData.avatar} alt="avatar" className="w-full h-full object-cover"/>
-                  ) : (
-                    formData.name ? formData.name.charAt(0).toUpperCase() : 'U'
-                  )}
+                    <img 
+                      src={formData.avatar} 
+                      alt="avatar" 
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        const fallback = e.target.parentElement?.querySelector('.avatar-fallback');
+                        if (fallback) fallback.classList.remove('hidden');
+                      }}
+                    />
+                  ) : null}
+                  <span className={`avatar-fallback ${formData.avatar ? 'hidden' : ''}`}>
+                    {formData.name ? formData.name.charAt(0).toUpperCase() : 'U'}
+                  </span>
                   {isUploadingAvatar && (
                     <div className="absolute inset-0 bg-slate-900/50 flex items-center justify-center">
                       <Loader2 size={24} className="text-white animate-spin" />

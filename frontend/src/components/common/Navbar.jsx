@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
 import { LogOut, Bell, Menu, X } from 'lucide-react';
+import { getMediaUrl } from '../../utils/media';
 
 export default function Navbar() {
   const { isAuthenticated, logout, user, unreadNotifications, fetchUnreadCount } = useAuthStore();
@@ -52,15 +53,19 @@ export default function Navbar() {
                   <div className="w-8 h-8 rounded-full bg-slate-200 overflow-hidden border border-slate-200 transition-transform group-hover:scale-105">
                     {user?.profile?.avatar ? (
                       <img 
-                        src={user.profile.avatar.startsWith('http') ? user.profile.avatar : `${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:8000'}${user.profile.avatar}`} 
+                        src={getMediaUrl(user.profile.avatar)} 
                         alt="avatar" 
                         className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                          const fallback = e.target.parentElement?.querySelector('.avatar-fallback');
+                          if (fallback) fallback.classList.remove('hidden');
+                        }}
                       />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-blue-100 text-blue-600 text-xs font-bold">
-                        {(user?.full_name?.[0] || user?.username?.[0] || 'U').toUpperCase()}
-                      </div>
-                    )}
+                    ) : null}
+                    <div className={`avatar-fallback w-full h-full flex items-center justify-center bg-blue-100 text-blue-600 text-xs font-bold ${user?.profile?.avatar ? 'hidden' : ''}`}>
+                      {(user?.full_name?.[0] || user?.username?.[0] || 'U').toUpperCase()}
+                    </div>
                   </div>
                   <span className="hidden sm:inline">{user?.full_name || user?.username || 'Profile'}</span>
                 </Link>
@@ -137,15 +142,19 @@ export default function Navbar() {
                 <div className="w-8 h-8 rounded-full bg-slate-200 overflow-hidden border border-slate-200">
                   {user?.profile?.avatar ? (
                     <img 
-                      src={user.profile.avatar.startsWith('http') ? user.profile.avatar : `${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:8000'}${user.profile.avatar}`} 
+                      src={getMediaUrl(user.profile.avatar)} 
                       alt="avatar" 
                       className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        const fallback = e.target.parentElement?.querySelector('.avatar-fallback');
+                        if (fallback) fallback.classList.remove('hidden');
+                      }}
                     />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-blue-100 text-blue-600 text-xs font-bold">
-                      {(user?.full_name?.[0] || user?.username?.[0] || 'U').toUpperCase()}
-                    </div>
-                  )}
+                  ) : null}
+                  <div className={`avatar-fallback w-full h-full flex items-center justify-center bg-blue-100 text-blue-600 text-xs font-bold ${user?.profile?.avatar ? 'hidden' : ''}`}>
+                    {(user?.full_name?.[0] || user?.username?.[0] || 'U').toUpperCase()}
+                  </div>
                 </div>
                 <span>{user?.full_name || user?.username || 'Profile'}</span>
               </Link>
